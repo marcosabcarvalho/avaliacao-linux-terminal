@@ -2,7 +2,7 @@
 
 Este pacote contém uma primeira versão da avaliação prática em duas modalidades:
 
-1. **Web / GitHub Pages**: terminal virtual em HTML + CSS + JavaScript, com exportação de entrega em JSON e relatório TXT.
+1. **Web / GitHub Pages**: terminal virtual em HTML + CSS + JavaScript, com exportação de entrega somente em TXT.
 2. **v86 / terminal real**: script `atividade_v86.sh` para rodar dentro de um Linux no v86 e gerar relatório copiável para o Classroom.
 
 ## Arquivos
@@ -10,7 +10,7 @@ Este pacote contém uma primeira versão da avaliação prática em duas modalid
 - `index.html`: página do aluno com terminal virtual.
 - `style.css`: estilos da página.
 - `app.js`: lógica do terminal virtual, desafios, validação e exportação.
-- `corretor.html`: página do professor para importar entregas JSON.
+- `corretor.html`: página do professor para importar entregas TXT.
 - `corretor.js`: lógica do corretor e exportação CSV.
 - `atividade_v86.sh`: versão alternativa para rodar no terminal Linux/v86.
 - `roteiro_v86_classroom.txt`: instruções para os alunos usarem a versão v86.
@@ -24,9 +24,9 @@ Depois:
 1. Preencha nome, e-mail e turma. A atividade é individual.
 2. Clique em **Iniciar avaliação**.
 3. Faça os comandos no terminal virtual.
-4. Clique em **Exportar entrega JSON**.
+4. Clique em **Exportar entrega TXT**.
 5. Abra `corretor.html`.
-6. Importe o JSON gerado.
+6. Importe o TXT gerado.
 7. Exporte CSV, se desejar.
 
 ## Comandos aceitos no terminal virtual
@@ -50,7 +50,7 @@ Depois:
 
 Nesta versão, cada questão pede apenas um comando. Isso deixa a correção mais clara e evita confusão quando o aluno cria diretórios um por vez.
 
-A avaliação gera um **código oculto de verificação** no momento em que o aluno inicia a tentativa. Esse código não aparece nos desafios nem precisa ser usado nos comandos. Ele fica salvo no JSON exportado para ajudar o professor a identificar duplicidades ou entregas copiadas.
+A avaliação gera um **código oculto de verificação** no momento em que o aluno inicia a tentativa. Esse código não aparece nos desafios nem precisa ser usado nos comandos. Ele fica salvo no TXT exportado para ajudar o professor a identificar duplicidades ou entregas copiadas.
 
 Exemplo dos comandos esperados nesta versão:
 
@@ -78,6 +78,20 @@ ls -l privado.txt
 chmod 777 privado.txt
 ls -l privado.txt
 ```
+
+
+## Nota automática
+
+A prova vale **7,0 pontos**. Todas as questões têm o mesmo peso.
+
+Como esta versão possui 22 questões, cada questão vale aproximadamente **0,3182 ponto**. O TXT exportado pelo aluno mostra:
+
+- quantidade de acertos;
+- percentual automático;
+- nota automática em uma escala de 0 a 7;
+- valor de cada questão.
+
+O `corretor.html` também mostra a nota e exporta essa informação no CSV.
 
 ## Como publicar no GitHub Pages
 
@@ -111,4 +125,4 @@ A validação mostra o comando principal usado, mas não revela o modo numérico
 
 ## Ajuste de código oculto
 
-Esta versão deriva da v7, mas remove a semente dos nomes dos arquivos e diretórios exibidos ao aluno. O código de verificação é gerado ocultamente e salvo no JSON/TXT exportado.
+Esta versão deriva da v7, mas remove a semente dos nomes dos arquivos e diretórios exibidos ao aluno. O código de verificação é gerado ocultamente e salvo no TXT exportado.

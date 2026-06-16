@@ -1,4 +1,9 @@
 const el = (id) => document.getElementById(id);
+const NOTA_MAXIMA = 7;
+
+function formatNota(valor) {
+  return Number(valor).toFixed(2).replace('.', ',');
+}
 
 const state = {
   iniciado: false,
@@ -22,7 +27,7 @@ function resetFs() {
 
 function gerarCodigoOculto(email) {
   // Código de verificação da tentativa. Não aparece nos desafios.
-  // Serve para identificar duplicidade de entrega e associar a tentativa ao JSON exportado.
+  // Serve para identificar duplicidade de entrega e associar a tentativa ao TXT exportado.
   const txt = (email || '') + '|' + new Date().toISOString() + '|' + Math.random();
   let h = 0;
   for (let i = 0; i < txt.length; i++) h = (h * 31 + txt.charCodeAt(i)) >>> 0;
@@ -323,7 +328,7 @@ function validate() {
   const ok = checks.filter(c => c[1]).length;
   el('validacao').innerHTML = checks.map(([label, passed], i) => `
     <div class="check"><span class="${passed ? 'ok' : 'no'}">${passed ? '✓' : '✗'}</span><span>${label}</span><strong>${passed ? 'ok' : 'pendente'}</strong></div>
-  `).join('') + `<p><strong>Parcial:</strong> ${ok}/${total} itens.</p>`;
+  `).join('') + `<p><strong>Parcial:</strong> ${ok}/${total} itens. <strong>Nota:</strong> ${formatNota(total ? (ok / total) * NOTA_MAXIMA : 0)} / ${formatNota(NOTA_MAXIMA)}</p>`;
 }
 
 function tarefasHtml() {
@@ -368,7 +373,6 @@ function start() {
   el('listaTarefas').innerHTML = tarefasHtml();
   el('cmd').disabled = false;
   el('cmd').placeholder = 'digite um comando...';
-  el('btnExportar').disabled = false;
   el('btnTxt').disabled = false;
   el('statusTerminal').textContent = 'em andamento';
   el('terminal').textContent = '';
@@ -399,7 +403,7 @@ function entregaObj() {
   const total = state.validacoes.length;
   const acertos = state.validacoes.filter(c => c[1]).length;
   return {
-    versao: '1.5-v7-codigo-oculto',
+    versao: '1.7-v7-codigo-oculto-txt-only-nota-7',
     tipo: 'avaliacao-linux-terminal-virtual',
     nome: state.nome,
     email: state.email,
@@ -407,7 +411,14 @@ function entregaObj() {
     codigoOculto: state.semente,
     inicio: state.inicio,
     fim: new Date().toISOString(),
-    pontuacaoAutomatica: { acertos, total, percentual: total ? Math.round(acertos * 100 / total) : 0 },
+    pontuacaoAutomatica: {
+      acertos,
+      total,
+      percentual: total ? Math.round(acertos * 100 / total) : 0,
+      notaMaxima: NOTA_MAXIMA,
+      nota: total ? Number(((acertos / total) * NOTA_MAXIMA).toFixed(2)) : 0,
+      valorPorQuestao: total ? Number((NOTA_MAXIMA / total).toFixed(4)) : 0
+    },
     validacoes: state.validacoes.map(([item, ok]) => ({ item, ok })),
     comandos: state.history,
     estadoFinal: state.fs
@@ -425,12 +436,6 @@ function download(filename, content, type) {
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 
-function exportJson() {
-  const obj = entregaObj();
-  const safe = (state.nome || 'aluno').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_|_$/g, '').toLowerCase();
-  download(`entrega_${safe}.json`, JSON.stringify(obj, null, 2), 'application/json');
-}
-
 function exportTxt() {
   const obj = entregaObj();
   const linhas = [];
@@ -439,7 +444,11 @@ function exportTxt() {
   linhas.push(`E-mail: ${obj.email}`);
   linhas.push(`Turma: ${obj.turma}`);
   linhas.push(`Código oculto de verificação: ${obj.codigoOculto}`);
-  linhas.push(`Pontuação automática: ${obj.pontuacaoAutomatica.acertos}/${obj.pontuacaoAutomatica.total}`);
+  linhas.push(`Início: ${obj.inicio}`);
+  linhas.push(`Fim: ${obj.fim}`);
+  linhas.push(`Pontuação automática: ${obj.pontuacaoAutomatica.acertos}/${obj.pontuacaoAutomatica.total} (${obj.pontuacaoAutomatica.percentual}%)`);
+  linhas.push(`Nota automática: ${formatNota(obj.pontuacaoAutomatica.nota)} / ${formatNota(obj.pontuacaoAutomatica.notaMaxima)}`);
+  linhas.push(`Valor por questão: ${formatNota(obj.pontuacaoAutomatica.valorPorQuestao)} ponto(s)`);
   linhas.push('\nVALIDAÇÕES:');
   obj.validacoes.forEach(v => linhas.push(`${v.ok ? '[OK]' : '[  ]'} ${v.item}`));
   linhas.push('\nHISTÓRICO DO TERMINAL:');
@@ -447,8 +456,14 @@ function exportTxt() {
     linhas.push(`$ ${h.cmd}`);
     if (h.saida) linhas.push(h.saida);
   });
+
+  // Bloco usado pelo corretor automático. O aluno pode entregar apenas este TXT.
+  linhas.push('\n---DADOS_AUTOMATICOS_INICIO---');
+  linhas.push(JSON.stringify(obj));
+  linhas.push('---DADOS_AUTOMATICOS_FIM---');
+
   const safe = (state.nome || 'aluno').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_|_$/g, '').toLowerCase();
-  download(`relatorio_${safe}.txt`, linhas.join('\n'), 'text/plain');
+  download(`entrega_${safe}.txt`, linhas.join('\n'), 'text/plain');
 }
 
 function reiniciar() {
@@ -459,7 +474,6 @@ function reiniciar() {
 
 el('btnIniciar').addEventListener('click', start);
 el('formTerminal').addEventListener('submit', submitCommand);
-el('btnExportar').addEventListener('click', exportJson);
 el('btnTxt').addEventListener('click', exportTxt);
 el('btnReiniciar').addEventListener('click', reiniciar);
 resetFs();
