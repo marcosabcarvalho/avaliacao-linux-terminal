@@ -1,0 +1,14 @@
+ROTEIRO V86 - AVALIAÇÃO LINUX
+
+1. Abra o Linux no v86.
+2. Crie um arquivo chamado atividade.sh.
+3. Cole o conteúdo do arquivo atividade_v86.sh.
+4. Execute:
+
+sh atividade.sh
+
+5. Preencha nome, e-mail e turma.
+6. Siga os desafios apresentados na tela.
+7. Ao final, copie o relatório final inteiro e cole na atividade do Classroom.
+
+Observação: o código oculto de verificação não precisa ser usado nos comandos. Ele aparece no relatório final para conferência do professor.

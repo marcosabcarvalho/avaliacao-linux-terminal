@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Corretor - Avaliação Linux</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topo">
+    <div>
+      <h1>Corretor automático - Avaliação Linux</h1>
+      <p>Importe os arquivos JSON entregues pelos alunos.</p>
+    </div>
+    <span class="badge">Professor</span>
+  </header>
+  <main class="layout">
+    <section class="painel" style="grid-column: 1 / -1;">
+      <h2>Importar entregas</h2>
+      <input id="files" type="file" accept=".json,application/json" multiple />
+      <div class="acoes">
+        <button id="btnCsv" disabled>Exportar CSV</button>
+        <button id="btnLimpar" class="secundario">Limpar</button>
+      </div>
+    </section>
+    <section class="painel" style="grid-column: 1 / -1; overflow:auto;">
+      <h2>Resultado</h2>
+      <div id="resumo">Nenhum arquivo importado.</div>
+    </section>
+  </main>
+  <script src="corretor.js"></script>
+</body>
+</html>

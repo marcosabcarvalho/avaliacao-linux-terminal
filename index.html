@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Avaliação Linux - Terminal Virtual</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topo">
+    <div>
+      <h1>Avaliação prática - Linux, arquivos e permissões</h1>
+      <p>Terminal virtual individual para execução de comandos e exportação da entrega.</p>
+    </div>
+    <span class="badge">GitHub Pages / local</span>
+  </header>
+
+  <main class="layout">
+    <section class="painel dados">
+      <h2>1. Identificação</h2>
+      <div class="grid-form">
+        <label>Nome completo
+          <input id="nome" placeholder="Ex.: Maria Silva" autocomplete="name" />
+        </label>
+        <label>E-mail
+          <input id="email" placeholder="Ex.: aluno@email.com" autocomplete="email" />
+        </label>
+        <label>Turma
+          <input id="turma" placeholder="Ex.: Redes - 2ª unidade" />
+        </label>
+      </div>
+      <div class="acoes">
+        <button id="btnIniciar">Iniciar avaliação</button>
+        <button id="btnExportar" disabled>Exportar entrega JSON</button>
+        <button id="btnTxt" disabled>Exportar relatório TXT</button>
+        <button id="btnReiniciar" class="secundario">Reiniciar</button>
+      </div>
+      <div id="boxSemente" class="semente oculto"></div>
+    </section>
+
+    <section class="painel tarefas">
+      <h2>2. Desafios</h2>
+      <ol id="listaTarefas">
+        <li>Inicie a avaliação para gerar o código oculto de verificação.</li>
+      </ol>
+      <p class="dica">Use <code>help</code> no terminal para ver os comandos disponíveis.</p>
+    </section>
+
+    <section class="painel terminal-area">
+      <div class="terminal-topbar">
+        <span>terminal@avaliacao</span>
+        <span id="statusTerminal">aguardando início</span>
+      </div>
+      <div id="terminal" class="terminal" aria-live="polite"></div>
+      <form id="formTerminal" class="linha-comando">
+        <span id="prompt">$</span>
+        <input id="cmd" autocomplete="off" spellcheck="false" disabled placeholder="inicie a avaliação..." />
+      </form>
+    </section>
+
+    <section class="painel progresso">
+      <h2>3. Validação local</h2>
+      <div id="validacao"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Observação: este é um terminal didático simulado. O objetivo é praticar comandos básicos e gerar uma entrega corrigível automaticamente.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
